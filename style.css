@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: linear-gradient(-135deg, #297fb8, #a5b9e9);
+}
+
+h1 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 40px;
+  color: lightyellow;
+  font-weight: 400;
+}
+
+input {
+  background-color: snow;
+  padding: 9px;
+  border-radius: 5px;
+  border: 0.4px solid black;
+  outline: 1px mediumaquamarine;
+}
+
+.weather-main {
+  margin: 55px 0;
+}
+
+.weather-title {
+  text-align: center;
+}
+
+.weather-icon {
+  text-align: center;
+  margin: 55px 0 30px 0;
+}
+
+.weather-form {
+  text-align: center;
+}
