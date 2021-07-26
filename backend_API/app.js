@@ -13,10 +13,17 @@ export class App {
             const weatherInputValue = weatherInputElement.value;
             weatherInputElement.value = "";
 
-            //APIモデルに値を渡す。
             const api = new Api();
-            //APIを叩いて表示。
-            api.requestApi(weatherInputValue);//返ってくるのはPromisオブジェクト
+            const weatherResultTextNode = document.querySelector(".weather-result-textnode")
+            //叩けるのはspanタグが存在しないとき。
+            if(weatherResultTextNode === null) {
+                api.requestApi(weatherInputValue);//APIモデルに値を渡して叩く。
+            }
+            //spanが存在するなら削除してから叩く
+            else{
+                weatherResultTextNode.remove();
+                api.requestApi(weatherInputValue);//APIモデルに値を渡して叩く。
+            }
         });
     }
 }

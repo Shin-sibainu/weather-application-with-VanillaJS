@@ -18,18 +18,21 @@ export class Api {
             })
             .then((jsonObj) => {
                 const weatherInfoOnly = this.receiveJsonResult(jsonObj);
+
                 //-----------ここからは本来はViewで管理したい---------------//
-                //ここで一回DOMに表示してみよう。
                 const weatherResultSpanElement = document.createElement("span");
+                weatherResultSpanElement.className = "weather-result-textnode";
+                console.log(weatherResultSpanElement);
                 const textNode = `Weather in ${inputValue} is ${weatherInfoOnly} now.`
                 var weatherResultText = document.createTextNode(textNode);
                 weatherResultSpanElement.appendChild(weatherResultText);
                 //挿入する親タグの取得
                 const weatherResultDivElement = document.querySelector(".weather-result");
                 weatherResultDivElement.appendChild(weatherResultSpanElement);
+                //-----------ここまで---------------//
             })
             .catch((e) => {
-                alert(`Please enter the city name in correct English.`);
+                alert(`Enter the correct city name in English.`);
             })
     }
 
@@ -39,7 +42,6 @@ export class Api {
         return data;
     }
 }
-
 
 
 //古いやり方ではできませんでした。
