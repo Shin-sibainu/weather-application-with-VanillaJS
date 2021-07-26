@@ -1,47 +1,62 @@
 //WeatherAppのAPIを叩くクラス
-//import { App } from "../app.js";
+import { urlSettingForRequestApi } from "../settings/urlsetting-util.js";
 
 export class Api {
-
-    getInputValue(inputValue) {
-        return inputValue;
-    }
-
-    requestApi(inputValue) {
-        //APIURLリソースを呼ぶ
-        const API_URL = this.urlSettingForRequestApi(inputValue);
-
-        //Ajax通信でAPI叩く。
-        var xhr = new XMLHttpRequest();
-
-        xhr.open('GET', API_URL);
-        xhr.send();
-
-        //サーバーと通信できたかのエラーハンドリング
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                //指定した全ての天気情報を抽出
-                const allWeatherInfo = JSON.parse(xhr.responseText);
-                //天気情報だけ抽出
-                const nowWeather = allWeatherInfo["weather"][0]["main"];
-                console.log(`The weather in ${inputValue} is ${nowWeather} now.`);
-            }
-        }
-    }
-
     /**
-     * ファイルを分けても良い。
-     * APIリソースURLを叩くための変数を返す。
+     * お天気APIを叩く
      * @param {string} inputValue 
-     * @returns {string} API_URLにはLondonやJapanといった半角ローマ字が格納されている。
      */
-    urlSettingForRequestApi(inputValue) {
-        const inputValueForCallApi = this.getInputValue(inputValue);
-        //日本語なら半角ローマ字に変換（次はここから）
+    requestApi = (inputValue) => {
+        //APIURLリソースを呼ぶ
+        const API_URL = urlSettingForRequestApi(inputValue);
+        console.log(API_URL);//正常
+        //Ajax通信でAPI叩く(fetch使ってみる)。
+        return fetch(API_URL)
+            .then((response) => {
+                //Promisオブジェクトが入る
+                return response.json();
+            })
+            .then((jsonObj) => {
+                const weatherInfoOnly = this.receiveJsonResult(jsonObj);
+                //-----------ここからは本来はViewで管理したい---------------//
+                //ここで一回DOMに表示してみよう。
+                const weatherResultSpanElement = document.createElement("span");
+                const textNode = `Weather in ${inputValue} is ${weatherInfoOnly} now.`
+                var weatherResultText = document.createTextNode(textNode);
+                weatherResultSpanElement.appendChild(weatherResultText);
+                //挿入する親タグの取得
+                const weatherResultDivElement = document.querySelector(".weather-result");
+                weatherResultDivElement.appendChild(weatherResultSpanElement);
+            })
+            .catch((e) => {
+                alert(`Please enter the city name in correct English.`);
+            })
+    }
 
-        //APIサーバーへのリソースURLを宣言
-        const API_URL = `http://api.openweathermap.org/data/2.5/weather?q=${inputValueForCallApi}&appid=25e5361f71bdade5113e8e97d6b73e40`;
-
-        return API_URL;
+    //Jsonの中の天気データだけを抽出。
+    receiveJsonResult = (jsonObj) => {
+        const data = jsonObj["weather"][0]["main"];
+        return data;
     }
 }
+
+
+
+//古いやり方ではできませんでした。
+/* var xhr = new XMLHttpRequest();
+xhr.open('GET', API_URL, false);
+//trycatch分を挿入する。
+xhr.send();
+
+//サーバーと通信できたかのエラーハンドリング
+xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log('onreadystatechangeが実行されました'); //DEBUG追加
+        //指定した全ての天気情報を抽出
+        const allWeatherInfo = JSON.parse(xhr.responseText);
+        //天気情報だけ抽出
+        const nowWeather = allWeatherInfo["weather"][0]["main"];
+        console.log(nowWeather); //Clouds
+        return nowWeather; //string
+    }
+} */

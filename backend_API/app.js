@@ -1,8 +1,8 @@
 import { Api } from "./model/api.js";
 //HTMLとAPIの受け渡しをするコントローラーの役目を果たす
 export class App {
-    constructor(){
-        
+    constructor() {
+
     }
 
     mount() {
@@ -11,12 +11,12 @@ export class App {
         weatherFormElement.addEventListener("submit", (event) => {
             event.preventDefault();
             const weatherInputValue = weatherInputElement.value;
-            //console.log(weatherInputValue); //inputのvalue情報ゲット。
             weatherInputElement.value = "";
 
             //APIモデルに値を渡す。
             const api = new Api();
-            api.requestApi(weatherInputValue);
+            //APIを叩いて表示。
+            api.requestApi(weatherInputValue);//返ってくるのはPromisオブジェクト
         });
     }
 }
