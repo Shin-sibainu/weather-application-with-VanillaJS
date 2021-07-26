@@ -1,5 +1,6 @@
 //WeatherAppのAPIを叩くクラス
 import { urlSettingForRequestApi } from "../settings/urlsetting-util.js";
+import { WeatherResultView } from "../view/weatherResultView.js"; 
 
 export class Api {
     /**
@@ -11,35 +12,18 @@ export class Api {
         const API_URL = urlSettingForRequestApi(inputValue);
         console.log(API_URL);//正常
         //Ajax通信でAPI叩く(fetch使ってみる)。
-        return fetch(API_URL)
+        fetch(API_URL)
             .then((response) => {
                 //Promisオブジェクトが入る
                 return response.json();
             })
             .then((jsonObj) => {
-                const weatherInfoOnly = this.receiveJsonResult(jsonObj);
-
-                //-----------ここからは本来はViewで管理したい---------------//
-                const weatherResultSpanElement = document.createElement("span");
-                weatherResultSpanElement.className = "weather-result-textnode";
-                console.log(weatherResultSpanElement);
-                const textNode = `Weather in ${inputValue} is ${weatherInfoOnly} now.`
-                var weatherResultText = document.createTextNode(textNode);
-                weatherResultSpanElement.appendChild(weatherResultText);
-                //挿入する親タグの取得
-                const weatherResultDivElement = document.querySelector(".weather-result");
-                weatherResultDivElement.appendChild(weatherResultSpanElement);
-                //-----------ここまで---------------//
+                const weatherResultView = new WeatherResultView();
+                weatherResultView.createResultElement(jsonObj, inputValue);
             })
             .catch((e) => {
                 alert(`Enter the correct city name in English.`);
             })
-    }
-
-    //Jsonの中の天気データだけを抽出。
-    receiveJsonResult = (jsonObj) => {
-        const data = jsonObj["weather"][0]["main"];
-        return data;
     }
 }
 

@@ -2,9 +2,7 @@ import { Api } from "./model/api.js";
 //HTMLとAPIの受け渡しをするコントローラーの役目を果たす
 export class App {
     constructor() {
-
     }
-
     mount() {
         const weatherInputElement = document.querySelector(".weather-input");
         const weatherFormElement = document.querySelector(".weather-form");
